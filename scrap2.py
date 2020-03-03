@@ -3,7 +3,8 @@ import pandas as pd
 from multiprocessing import Pool
 import time
 from IPython.display import display
-
+import json
+import collections
 
 global twitter_user_info
 twitter_user_info=[]
@@ -34,7 +35,7 @@ def get_user_info(twitter_user):
 
 def main():
     start = time.time()
-    users = ['Carlos_F_Enguix']
+    users = ['realDonaldTrump']
 
     pool = Pool(8)    
     for user in pool.map(get_user_info,users):
@@ -48,9 +49,23 @@ def main():
     print("Elapsed time: ")
     print(elapsed)
     display(data_frame)
-    
-    print("done!")
+data = {}   
+data['aa'] = "aa"
+
+json_dump = json.dumps(data)
+json_object = json.loads(json_dump)
+
+with open('data.json', 'w') as f:
+  json.dump(json_object, f, ensure_ascii=False, indent=2)
+
+
+print("Done!")
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
 
