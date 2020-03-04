@@ -6,6 +6,7 @@ import time
 from IPython.display import display
 import json
 import collections
+from datetime import datetime
 
 global twitter_user_info
 twitter_user_info = []
@@ -51,39 +52,26 @@ def main():
     print("Elapsed time: ")
     print(elapsed)
     display(data_frame)
-
-    for tweet in query_tweets_from_user("realDonaldTrump", limit=1):
-        data['aa'] = "aa"
-        data['screen_name'] = tweet.screen_name
-        data['timestamp'] = tweet.timestamp
-        data['timestamp_epochs'] = tweet.timestamp_epochs
-        data['text'] = tweet.text
-        #print(tweet.text)
 '''
-
-    #data_array[0] = data
-    #count = 0
-
-
-    #data[count] = "aa"
+    with open("data.json", "w") as f:
+        f.write("Current time {} START!!!\n".format(datetime.now().ctime()))
+    users = ['realDonaldTrump','RobinBew','TheEIU','TheEconomist','seanmdav','erm3114',
+    'AgatheDemarais','john_c_ferguson','maxlambertson','davidfrum','Lagarde','RobertAlanWard']
     json_object_array = []
     data = {}
-    data['aa'] = "aa"
-    data['screen_name'] = "tweet.screen_name"
-    s = "fsdf"
-    for tweet in query_tweets_from_user("realDonaldTrump", limit=1):
-        #print(tweet.text)        
-        s = tweet.text
-        print(s)
-        json_dump = json.dumps(data)
-        json_object_array.append(json.loads(json_dump))
-    #for count in range(20):
-        #data[count] = "ss"
-        #json_dump = json.dumps(data)
-        #json_object_array.append(json.loads(json_dump))
-    #print(data)
-    with open('data.json', 'w') as f:
-        json.dump(json_object_array, f, ensure_ascii=False, indent=2)
+    tweet_count_old = 0    
+    for user in users:
+        for tweet in query_tweets_from_user(user, limit=10):
+            data['screen_name'] = tweet.screen_name.encode('utf-8')
+            data['timestamp'] = tweet.timestamp.ctime()
+            data['text'] = tweet.text.encode('utf-8')
+            json_dump = json.dumps(data)
+            json_object_array.append(json.loads(json_dump))
+        with open("data.json", "a") as f:
+            f.write("Got {} tweets from username {}\n".format(len(json_object_array) - tweet_count_old,user))
+        tweet_count_old = len(json_object_array)
+    with open('data.json', 'a') as f:
+        json.dump(json_object_array, f,  indent=2)    
 
 
 print("Done!")
